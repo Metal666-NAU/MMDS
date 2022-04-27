@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab2_1/bloc/root/events.dart';
+import 'bloc/root/events.dart';
 
 import 'bloc/root/bloc.dart';
 import 'data/calculations_repository.dart';
@@ -22,6 +22,12 @@ void main() => runApp(MyApp(
           onBackground: Colors.grey[300]!,
           surface: Colors.grey[850]!,
           onSurface: Colors.grey[300]!,
+        ),
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(
+            fontSize: 22,
+            color: Colors.grey[350],
+          ),
         ),
       ),
     ));
@@ -45,7 +51,7 @@ class MyApp extends StatelessWidget {
               create: (context) =>
                   RootBloc(context.read<CalculationsRepository>())
                     ..add(AppLoaded()),
-              child: Root(),
+              child: const Root(),
             ),
           ),
         ),

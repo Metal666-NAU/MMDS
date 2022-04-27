@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab2_1/data/calculations_repository.dart';
+import '../../data/calculations_repository.dart';
 
 import 'events.dart';
 import 'state.dart';
@@ -11,22 +11,22 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     on<AppLoaded>((event, emit) =>
         emit(RootState(results: _calculationsRepository.calculate())));
     on<IntegrationStepChanged>((event, emit) {
+      double integrationStep = event.integrationStep.clamp(0.001, 1);
+
       emit(state.copyWith(
-        integrationStep: () => event.integrationStep,
+        integrationStep: () => integrationStep,
         results: () => _calculationsRepository.calculate(
-          integrationStep: event.integrationStep,
+          integrationStep: integrationStep,
           damper: state.damper,
         ),
       ));
     });
-    on<DamperTypeChanged>((event, emit) {
-      emit(state.copyWith(
-        damper: () => event.damper,
-        results: () => _calculationsRepository.calculate(
-          integrationStep: state.integrationStep,
-          damper: event.damper,
-        ),
-      ));
-    });
+    on<DamperTypeChanged>((event, emit) => emit(state.copyWith(
+          damper: () => event.damper,
+          results: () => _calculationsRepository.calculate(
+            integrationStep: state.integrationStep,
+            damper: event.damper,
+          ),
+        )));
   }
 }

@@ -1,13 +1,8 @@
 class CalculationsRepository {
-  //final int Q = 41;
-
   CalculationResults calculate({
     double integrationStep = 0.01,
     Damper damper = Damper.none,
   }) {
-    final List<double> x = [];
-    final List<double> y = [];
-
     const double wingArea = 201.45;
     const double wingChord = 5.285;
     const double planeWeight = 73000;
@@ -40,8 +35,6 @@ class CalculationsRepository {
     double elapsedTime = 0;
     double displayTime = 0;
 
-    int aa = 0;
-
     const double sigmany =
         (maz / cay) + (p * wingArea * wingChord * mwzz / (2 * m));
     const double cybal = 2 * planeWeight / (wingArea * p * v * v);
@@ -66,10 +59,8 @@ class CalculationsRepository {
     const double c9 = (cdby * wingArea * p * v) / (m * 2);
     const double c16 = v / (57.3 * gravity);
 
-    for (int i = 0; i < 5; i++) {
-      x[i] = 0;
-      y[i] = 0;
-    }
+    final List<double> x = List.filled(5, 0);
+    final List<double> y = List.filled(5, 0);
 
     while (elapsedTime < flightDuration) {
       for (int a = 0; a <= (flightDuration / integrationStep); a++) {
@@ -106,14 +97,13 @@ class CalculationsRepository {
         }
 
         if (elapsedTime >= displayTime) {
-          results.t[aa] = elapsedTime;
-          results.xb[aa] = xv;
-          results.dv[aa] = dv;
-          results.y2[aa] = y[2];
-          results.y3[aa] = y[3];
-          results.ny[aa] = ny;
+          results.t.add(elapsedTime);
+          results.xb.add(xv);
+          results.dv.add(dv);
+          results.y2.add(y[2]);
+          results.y3.add(y[3]);
+          results.ny.add(ny);
           displayTime = displayTime + displayStep;
-          aa++;
         }
         elapsedTime = elapsedTime + integrationStep;
       }

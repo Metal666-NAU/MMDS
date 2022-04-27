@@ -1,4 +1,4 @@
-import 'package:lab2_1/data/calculations_repository.dart';
+import '../../data/calculations_repository.dart';
 
 class RootState {
   final double integrationStep;
@@ -7,7 +7,7 @@ class RootState {
   final CalculationResults? results;
 
   RootState({
-    this.integrationStep = 0.01,
+    this.integrationStep = 0.001,
     this.damper = Damper.none,
     this.results,
   });
