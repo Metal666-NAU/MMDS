@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lab2_1/bloc/root/events.dart';
 
 import 'bloc/root/bloc.dart';
+import 'data/calculations_repository.dart';
 import 'views/root.dart';
 
 void main() => runApp(MyApp(
@@ -37,9 +39,14 @@ class MyApp extends StatelessWidget {
         title: 'Lab 2.1',
         theme: theme,
         home: Scaffold(
-          body: BlocProvider(
-            create: (context) => RootBloc(),
-            child: Root(),
+          body: RepositoryProvider(
+            create: (context) => CalculationsRepository(),
+            child: BlocProvider(
+              create: (context) =>
+                  RootBloc(context.read<CalculationsRepository>())
+                    ..add(AppLoaded()),
+              child: Root(),
+            ),
           ),
         ),
       );
