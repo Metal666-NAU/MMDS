@@ -16,7 +16,14 @@ class Root extends StatelessWidget {
   Widget build(BuildContext context) => Column(
         children: <Widget>[
           _integrationStepSlider(),
-          _damperTypeSelector(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _damperTypeSelector(),
+              const VerticalDivider(width: 50),
+              _variantSelector(),
+            ],
+          ),
           Expanded(
             child: Swiper.children(
               plugins: <SwiperPlugin>[ControlsPlugin()],
@@ -115,6 +122,44 @@ class Root extends StatelessWidget {
         ),
       );
 
+  Widget _variantSelector() => BlocBuilder<RootBloc, RootState>(
+        builder: (context, state) => Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Text(
+                'VARIANT',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
+            ToggleButtons(
+              children: <String>[
+                '1st',
+                '2nd',
+                '3rd',
+              ]
+                  .map((string) => Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 5,
+                          horizontal: 25,
+                        ),
+                        child: Text(
+                          string,
+                          style: Theme.of(context).textTheme.button,
+                        ),
+                      ))
+                  .toList(),
+              isSelected: Variant.values
+                  .map((value) => value == state.variant)
+                  .toList(),
+              onPressed: (index) => context
+                  .read<RootBloc>()
+                  .add(VariantChanged(Variant.values[index])),
+            )
+          ],
+        ),
+      );
+
   Widget _graph1() => BlocBuilder<RootBloc, RootState>(
         buildWhen: (previous, current) => current.results != null,
         builder: (context, state) => _tableGraph(
@@ -179,7 +224,8 @@ class Root extends StatelessWidget {
                 .map((row) => DataRow(
                     cells: row
                         .map((cell) => DataCell(SizedBox(
-                              width: constraints.maxWidth / row.length / 1.5,
+                              width:
+                                  (constraints.maxWidth - 60) / row.length / 2,
                               child: Text(
                                 cell,
                                 maxLines: 1,

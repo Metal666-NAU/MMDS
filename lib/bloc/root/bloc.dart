@@ -18,6 +18,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
         results: () => _calculationsRepository.calculate(
           integrationStep: integrationStep,
           damper: state.damper,
+          variant: state.variant,
         ),
       ));
     });
@@ -26,6 +27,15 @@ class RootBloc extends Bloc<RootEvent, RootState> {
           results: () => _calculationsRepository.calculate(
             integrationStep: state.integrationStep,
             damper: event.damper,
+            variant: state.variant,
+          ),
+        )));
+    on<VariantChanged>((event, emit) => emit(state.copyWith(
+          variant: () => event.variant,
+          results: () => _calculationsRepository.calculate(
+            integrationStep: state.integrationStep,
+            damper: state.damper,
+            variant: event.variant,
           ),
         )));
   }

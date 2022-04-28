@@ -6,31 +6,39 @@ import 'bloc/root/bloc.dart';
 import 'data/calculations_repository.dart';
 import 'views/root.dart';
 
-void main() => runApp(MyApp(
-      theme: ThemeData.from(
-        colorScheme: ColorScheme(
-          brightness: Brightness.dark,
-          primary: Colors.deepPurple,
-          onPrimary: Colors.white,
-          secondary: Colors.white,
-          onSecondary: Colors.black,
-          tertiary: Colors.purpleAccent[700],
-          onTertiary: Colors.black,
-          error: Colors.red,
-          onError: Colors.white,
-          background: Colors.grey[900]!,
-          onBackground: Colors.grey[300]!,
-          surface: Colors.grey[850]!,
-          onSurface: Colors.grey[300]!,
-        ),
-        textTheme: TextTheme(
-          bodyLarge: TextStyle(
-            fontSize: 22,
-            color: Colors.grey[350],
-          ),
+import 'package:window_size/window_size.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  setWindowMinSize(const Size(800, 500));
+
+  runApp(MyApp(
+    theme: ThemeData.from(
+      colorScheme: ColorScheme(
+        brightness: Brightness.dark,
+        primary: Colors.deepPurple,
+        onPrimary: Colors.white,
+        secondary: Colors.white,
+        onSecondary: Colors.black,
+        tertiary: Colors.purpleAccent[700],
+        onTertiary: Colors.black,
+        error: Colors.red,
+        onError: Colors.white,
+        background: Colors.grey[900]!,
+        onBackground: Colors.grey[300]!,
+        surface: Colors.grey[850]!,
+        onSurface: Colors.grey[300]!,
+      ),
+      textTheme: TextTheme(
+        bodyLarge: TextStyle(
+          fontSize: 22,
+          color: Colors.grey[350],
         ),
       ),
-    ));
+    ),
+  ));
+}
 
 class MyApp extends StatelessWidget {
   final ThemeData theme;

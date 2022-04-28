@@ -15,3 +15,9 @@ class DamperTypeChanged extends RootEvent {
 
   DamperTypeChanged(this.damper);
 }
+
+class VariantChanged extends RootEvent {
+  final Variant variant;
+
+  VariantChanged(this.variant);
+}

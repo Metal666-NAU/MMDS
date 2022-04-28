@@ -2,6 +2,7 @@ class CalculationsRepository {
   CalculationResults calculate({
     double integrationStep = 0.01,
     Damper damper = Damper.none,
+    Variant variant = Variant.first,
   }) {
     const double wingArea = 201.45;
     const double wingChord = 5.285;
@@ -9,22 +10,6 @@ class CalculationsRepository {
     const double center = 0.24;
     const double momentOfInertia = 660000;
 
-    const double v = 97.2;
-    //const double h0 = 500;
-    const double p = 0.119;
-    //const double an = 338.36;
-    const double gravity = 9.81;
-
-    const double cy = -0.255;
-    const double cay = 5.78;
-    const double cdby = 0.2865;
-    const double cx = 0.046;
-    const double mz = 0.2;
-    const double mwzz = -13;
-    const double mazm = -3.8;
-    const double maz = -1.83;
-    const double mdbz = -0.96;
-    const double m = planeWeight / gravity;
     const double flightDuration = 20;
     const double displayStep = 0.5;
     const double ks = 0.112;
@@ -32,13 +17,83 @@ class CalculationsRepository {
     const double twz = 0.7;
     const double xv = -17.86;
 
+    double v;
+    double p;
+
+    const double gravity = 9.81;
+    const double m = planeWeight / gravity;
+
+    double cy;
+    double cay;
+    double cdby;
+    double cx;
+    double mz;
+    double mwzz;
+    double mazm;
+    double maz;
+    double mdbz;
+
+    switch (variant) {
+      case Variant.first:
+        {
+          v = 97.2;
+          p = 0.119;
+
+          cy = -0.255;
+          cay = 5.78;
+          cdby = 0.2865;
+          cx = 0.046;
+          mz = 0.2;
+          mwzz = -13;
+          mazm = -3.8;
+          maz = -1.83;
+          mdbz = -0.96;
+
+          break;
+        }
+      case Variant.second:
+        {
+          v = 190;
+          p = 0.0636;
+
+          cy = -0.28;
+          cay = 5.9;
+          cdby = 0.2865;
+          cx = 0.033;
+          mz = 0.22;
+          mwzz = -13.4;
+          mazm = -4.0;
+          maz = -1.95;
+          mdbz = -0.92;
+
+          break;
+        }
+      case Variant.third:
+        {
+          v = 250;
+          p = 0.0372;
+
+          cy = -0.32;
+          cay = 6.3;
+          cdby = 0.2635;
+          cx = 0.031;
+          mz = 0.27;
+          mwzz = -15.5;
+          mazm = -5.2;
+          maz = -2.69;
+          mdbz = -0.92;
+
+          break;
+        }
+    }
+
     double elapsedTime = 0;
     double displayTime = 0;
 
-    const double sigmany =
+    final double sigmany =
         (maz / cay) + (p * wingArea * wingChord * mwzz / (2 * m));
-    const double cybal = 2 * planeWeight / (wingArea * p * v * v);
-    const double abal = 57.3 * ((cybal - cy) / cay);
+    final double cybal = 2 * planeWeight / (wingArea * p * v * v);
+    final double abal = 57.3 * ((cybal - cy) / cay);
 
     final CalculationResults results = CalculationResults(
       cybal,
@@ -47,17 +102,17 @@ class CalculationsRepository {
       -57.3 * sigmany * cybal / mdbz,
     );
 
-    const double c1 = -(mwzz * wingArea * wingChord * wingChord * p * v) /
+    final double c1 = -(mwzz * wingArea * wingChord * wingChord * p * v) /
         (momentOfInertia * 2);
-    const double c2 =
+    final double c2 =
         -(maz * wingArea * wingChord * p * v * v) / (momentOfInertia * 2);
-    const double c3 =
+    final double c3 =
         -(mdbz * wingArea * wingChord * p * v * v) / (momentOfInertia * 2);
-    const double c4 = ((cay + cx) * wingArea * p * v) / (m * 2);
-    const double c5 = -(mazm * wingArea * wingChord * wingChord * p * v) /
+    final double c4 = ((cay + cx) * wingArea * p * v) / (m * 2);
+    final double c5 = -(mazm * wingArea * wingChord * wingChord * p * v) /
         (momentOfInertia * 2);
-    const double c9 = (cdby * wingArea * p * v) / (m * 2);
-    const double c16 = v / (57.3 * gravity);
+    final double c9 = (cdby * wingArea * p * v) / (m * 2);
+    final double c16 = v / (57.3 * gravity);
 
     final List<double> x = List.filled(5, 0);
     final List<double> y = List.filled(5, 0);
@@ -117,6 +172,12 @@ enum Damper {
   none,
   type_1,
   type_2,
+}
+
+enum Variant {
+  first,
+  second,
+  third,
 }
 
 class CalculationResults {
