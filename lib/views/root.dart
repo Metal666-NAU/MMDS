@@ -2,11 +2,12 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/root/events.dart';
-import '../data/calculations_repository.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 
 import '../bloc/root/bloc.dart';
+import '../bloc/root/events.dart';
 import '../bloc/root/state.dart';
+import '../data/calculations_repository.dart';
 import 'swiper/controls_plugin.dart';
 
 class Root extends StatelessWidget {
@@ -163,12 +164,17 @@ class Root extends StatelessWidget {
   Widget _graph1() => BlocBuilder<RootBloc, RootState>(
         buildWhen: (previous, current) => current.results != null,
         builder: (context, state) => _tableGraph(
-          columns: const <Widget>[
-            Text('Cybal'),
-            Text('abal'),
-            Text('dvbal'),
-            Text('dnyv'),
-          ],
+          columns: <String>[
+            'c_{убал}',
+            'a_{бал}',
+            r'\delta_{вбал}',
+            r'\delta{_в^{n_y}}',
+          ]
+              .map((string) => Math.tex(
+                    string,
+                    textScaleFactor: 1.5,
+                  ))
+              .toList(),
           rows: <List<String>>[
             <String>[
               state.results!.cybal.toString(),
@@ -183,14 +189,19 @@ class Root extends StatelessWidget {
   Widget _graph2() => BlocBuilder<RootBloc, RootState>(
         buildWhen: (previous, current) => current.results != null,
         builder: (context, state) => _tableGraph(
-          columns: const <Widget>[
-            Text('T'),
-            Text('Xb'),
-            Text('Dv'),
-            Text('Y3'),
-            Text('Y4'),
-            Text('NY'),
-          ],
+          columns: <String>[
+            't',
+            'X_в',
+            r'\delta_{в}',
+            r'a_{бал}',
+            r'\delta_{вд}',
+            r'\delta{_в^{n_y}}'
+          ]
+              .map((string) => Math.tex(
+                    string,
+                    textScaleFactor: 1.5,
+                  ))
+              .toList(),
           rows: List.generate(
             state.results!.t.length,
             (index) => <String>[
@@ -255,6 +266,57 @@ class Root extends StatelessWidget {
                 ),
                 rightTitles: AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
+                ),
+                leftTitles: AxisTitles(
+                  axisNameWidget: Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Math.tex(
+                      't',
+                      textScaleFactor: 2,
+                    ),
+                  ),
+                  axisNameSize: 50,
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 40,
+                    getTitlesWidget: (value, meta) {
+                      if (value == meta.max || value == meta.min) {
+                        return const Text('');
+                      }
+                      return Text(
+                        value
+                            .toStringAsFixed(2)
+                            .replaceFirst(RegExp(r'\.?0*$'), ''),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      );
+                    },
+                  ),
+                ),
+                bottomTitles: AxisTitles(
+                  axisNameWidget: Math.tex(
+                    r'\delta{_в^{n_y}}',
+                    textScaleFactor: 2,
+                  ),
+                  axisNameSize: 50,
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 35,
+                    getTitlesWidget: (value, meta) {
+                      if (value == meta.max || value == meta.min) {
+                        return const Text('');
+                      }
+
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(
+                          value
+                              .toStringAsFixed(1)
+                              .replaceFirst(RegExp(r'\.?0*$'), ''),
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
               lineTouchData: LineTouchData(
