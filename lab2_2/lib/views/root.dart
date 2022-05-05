@@ -122,6 +122,7 @@ class Root extends StatelessWidget {
     required List<String> divisionLabels,
   }) =>
       BlocBuilder<RootBloc, RootState>(
+        buildWhen: (previous, current) => value(previous) != value(current),
         builder: (context, state) => Column(
           children: <Widget>[
             const SizedBox(height: 15),
@@ -192,17 +193,17 @@ class Root extends StatelessWidget {
         buildWhen: (previous, current) => current.results != null,
         builder: (context, state) => _resultTable(
           columns: <String>[
-            'T',
-            'WX',
-            'X',
-            'DV',
-            'DG',
-            'Y0',
-            'Y1',
-            'Y3',
-            'Y5',
-            'NY',
-            'VV',
+            't',
+            'W_x',
+            'x',
+            r'\delta_в',
+            r'\delta_г',
+            'Y_0',
+            'Y_1',
+            'Y_3',
+            'Y_5',
+            'n_y',
+            'V_в',
           ]
               .map((string) => Math.tex(
                     string,
@@ -232,27 +233,27 @@ class Root extends StatelessWidget {
         buildWhen: (previous, current) => current.results != null,
         builder: (context, state) => _resultTable(
           columns: <String>[
-            'C1',
-            'C2',
-            'C3',
-            'C4',
-            'C5',
-            'C6',
-            'C7',
-            'C8',
-            'C9',
-            'C16',
-            'C17',
-            'C18',
-            'C19',
-            'e1',
-            'e2',
-            'e3',
-            'agp',
-            'cygp',
-            'dvgp',
-            'dvny',
-            'Tv',
+            'c_1',
+            'c_2',
+            'c_3',
+            'c_4',
+            'c_5',
+            'c_6',
+            'c_7',
+            'c_8',
+            'c_9',
+            'c_{16}',
+            'c_{17}',
+            'c_{18}',
+            'c_{19}',
+            'e_1',
+            'e_2',
+            'e_3',
+            'a_{гп}',
+            'c_{угп}',
+            r'\delta_{вгп}',
+            r'\delta_в^{n_y}',
+            'T_V',
           ]
               .map((string) => Math.tex(
                     string,
@@ -284,12 +285,14 @@ class Root extends StatelessWidget {
               state.results!.Tv,
             ].map((value) => value.toString()).toList()
           ],
+          direction: Axis.horizontal,
         ),
       );
 
   Widget _resultTable({
     required List<Widget> columns,
     required List<List<String>> rows,
+    Axis direction = Axis.vertical,
   }) =>
       LayoutBuilder(
         builder: (
@@ -298,7 +301,6 @@ class Root extends StatelessWidget {
         ) =>
             SingleChildScrollView(
           primary: false,
-          scrollDirection: Axis.vertical,
           child: DataTable(
             columns:
                 columns.map((column) => DataColumn(label: column)).toList(),
@@ -322,29 +324,29 @@ class Root extends StatelessWidget {
       );
 
   Widget _graph1() => _resultGraph(
-        Text('t'),
-        Text('vv'),
+        'V_в',
+        't',
         (state) =>
             Map.fromIterables(state.results!.time, state.results!.massVV),
       );
 
   Widget _graph2() => _resultGraph(
-        Text('t'),
-        Text('y5'),
+        'y_5',
+        't',
         (state) =>
             Map.fromIterables(state.results!.time, state.results!.massY5),
       );
 
   Widget _graph3() => _resultGraph(
-        Text('t'),
-        Text('ny'),
+        'n_y',
+        't',
         (state) =>
             Map.fromIterables(state.results!.time, state.results!.massNY),
       );
 
   Widget _resultGraph(
-    Widget leftAxisName,
-    Widget bottomAxisName,
+    String leftAxisName,
+    String bottomAxisName,
     Map<double, double> Function(RootState) spots,
   ) =>
       BlocBuilder<RootBloc, RootState>(
@@ -367,7 +369,10 @@ class Root extends StatelessWidget {
                 leftTitles: AxisTitles(
                   axisNameWidget: Padding(
                     padding: const EdgeInsets.only(bottom: 8),
-                    child: leftAxisName,
+                    child: Math.tex(
+                      leftAxisName,
+                      textScaleFactor: 2,
+                    ),
                   ),
                   axisNameSize: 50,
                   sideTitles: SideTitles(
@@ -387,7 +392,10 @@ class Root extends StatelessWidget {
                   ),
                 ),
                 bottomTitles: AxisTitles(
-                  axisNameWidget: bottomAxisName,
+                  axisNameWidget: Math.tex(
+                    bottomAxisName,
+                    textScaleFactor: 2,
+                  ),
                   axisNameSize: 50,
                   sideTitles: SideTitles(
                     showTitles: true,

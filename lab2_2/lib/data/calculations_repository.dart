@@ -8,63 +8,131 @@ class CalculationsRepository {
     double wind = 0,
     Variant variant = Variant.first,
   }) {
-    double S = 201.45,
+    const double S = 201.45,
         ba = 5.285,
         G = 73000,
         xt_ = 0.18,
-        NY,
         Iz = 660000,
         ndv = 3,
         Ydv = 0.5,
-        V = 97.2,
-        H = 500,
-        p = 0.1190,
-        an = 338.36,
         g = 9.81,
-        cy0 = -0.255,
-        cya = 5.78,
-        c_y = 0.2865,
-        cMy = 0.0,
-        cMx = 0.0,
-        cxhp = 0.046,
-        c_Ax = 0.286,
+        DT = 0.01,
+        DD = 2,
+        TF = 180,
+        Mzm = 0;
+
+    double dxt_,
+        m,
+        VV,
+        NY,
+        //Vpr,
         Mhp,
         cx,
         wv,
         sigmav,
         sigmany,
         dny,
-        mz0 = 0.20,
-        mzw_ = -13.0,
-        mza_ = -3.8,
-        mza = -1.83,
-        m_z = -0.96,
-        mCyZ = -0.3166,
-        P1v = -13.8,
-        P1d = 7003,
-        DT = 0.01,
-        DD = 2,
-        TF = 180,
-        T = 0,
+        V,
+        //H,
+        p,
+        an,
+        cy0,
+        cya,
+        c_y,
+        cMy,
+        cMx,
+        cxhp,
+        c_Ax,
+        mz0,
+        mzw_,
+        mza_,
+        mza,
+        m_z,
+        mCyZ,
+        P1v,
+        P1d,
         TD = 0,
-        Mzm = 0,
-        Vpr;
+        T = 0;
 
-    double dxt_, m, VV;
-
-    List<double> X = [], Y = List.filled(6, 0);
+    List<double> X = List.filled(6, 0), Y = List.filled(6, 0);
 
     switch (variant) {
       case Variant.first:
         {
+          V = 97.2;
+          //H = 500;
+          p = 0.119;
+          an = 338.36;
+
+          cy0 = -0.255;
+          cya = 5.78;
+          c_y = 0.2865;
+          cMy = 0.0;
+          cxhp = 0.046;
+
+          c_Ax = 0.286;
+          cMx = 0.0;
+          mz0 = 0.2;
+          mzw_ = -13.0;
+          mza_ = -3.8;
+          mza = -1.83;
+          m_z = -0.96;
+          mCyZ = -0.3166;
+          P1d = 7003;
+          P1v = -13.8;
+
           break;
         }
       case Variant.second:
         {
+          V = 190;
+          //H = 6400;
+          p = 0.0636;
+          an = 314.34;
+
+          cy0 = -0.28;
+          cya = 5.9;
+          c_y = 0.2865;
+          cMy = 0.1;
+          cxhp = 0.033;
+
+          c_Ax = 0.336;
+          cMx = 0.008;
+          mz0 = 0.22;
+          mzw_ = -13.4;
+          mza_ = -4.0;
+          mza = -1.95;
+          m_z = -0.92;
+          mCyZ = -0.3306;
+          P1d = 4011;
+          P1v = -5.4;
+
           break;
         }
       case Variant.third:
         {
+          V = 250;
+          //H = 11300;
+          p = 0.0372;
+          an = 295.06;
+
+          cy0 = -0.32;
+          cya = 6.3;
+          c_y = 0.2635;
+          cMy = 0.2;
+          cxhp = 0.031;
+
+          c_Ax = 0.36;
+          cMx = 0.0267;
+          mz0 = 0.27;
+          mzw_ = -15.5;
+          mza_ = -5.2;
+          mza = -2.69;
+          m_z = -0.92;
+          mCyZ = -0.427;
+          P1d = 2292;
+          P1v = 0.8;
+
           break;
         }
     }
@@ -78,7 +146,7 @@ class CalculationsRepository {
     double cyhp = (2 * G) / (S * p * pow(V, 2));
     double agp = 57.3 * (cyhp - cy0) / cya;
 
-    Vpr = V * (3600.0 / 1000.0) * sqrt(p / 0.1249);
+    //Vpr = V * (3600.0 / 1000.0) * sqrt(p / 0.1249);
     sigmav = mCyZ * (1 + cMy * (Mzm / (2 * cyhp))) - Mzm * (Mhp / (2 * cyhp));
     sigmany = mCyZ + (p * S * ba / (2 * m)) * mzw_;
     wv = (g / V) * (sqrt(2 * sigmav / sigmany));
@@ -111,30 +179,23 @@ class CalculationsRepository {
     Y[5] = 0;
     VV = 0;
     while (T <= TF) {
-      //DIN
-      X.add(-results.e1 * VV -
+      X[0] = -results.e1 * VV -
           results.C8 * Y[4] -
           results.C7 * Y[1] -
-          results.C19 * throttle);
-      X.add(Y[2]);
-      X.add(-results.C1 * Y[2] -
+          results.C19 * throttle;
+      X[1] = Y[2];
+      X[2] = -results.C1 * Y[2] -
           (results.C2 + results.C17) * Y[4] -
           /*results.C5 * X[4]*/ -results.e3 * VV -
-          (results.C3 + results.C18) * elevatingRudder);
-      X.add(results.C4 * Y[4] + results.e2 * VV + results.C9 * elevatingRudder);
-      X.add(X[1] - X[3]);
-      X.add(results.C6 * Y[3]);
-      //X[0] - кутова земна швидкість
-      //X[1] - кутове прискорення тангажу
-      //X[2] - кутова швидкість тангажу
-      //X[3] - швидкість зміни кута нахилу траекторії
-      //X[4] - швидкість зміни кута атаки
-      //X[5] - швидкість зміни висоти польоту
+          (results.C3 + results.C18) * elevatingRudder;
+      X[3] = results.C4 * Y[4] + results.e2 * VV + results.C9 * elevatingRudder;
+      X[4] = X[1] - X[3];
+      X[5] = results.C6 * Y[3];
 
-      VV = Y[0] - wind; // істинна повітряна швидкість
+      VV = Y[0] - wind;
 
       NY = results.C16 * X[3];
-      //Ellier
+
       for (int i = 0; i < 6; i++) {
         Y[i] = Y[i] + X[i] * DT;
       }
@@ -152,10 +213,10 @@ class CalculationsRepository {
         results.massDG.add(throttle);
         results.massNY.add(NY);
 
-        TD = TD + DD;
+        TD += DD;
       }
 
-      T = T + DT;
+      T += DT;
     }
 
     return results;
