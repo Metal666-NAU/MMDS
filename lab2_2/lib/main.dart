@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'Lab 2.1',
+        title: 'Lab 2.2',
         theme: theme,
         home: Scaffold(
           body: RepositoryProvider(
