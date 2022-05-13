@@ -65,7 +65,7 @@ class Root extends StatelessWidget {
       );
 
   Widget _rudderSlider() => _parameterSlider(
-        text: 'Rudder',
+        text: 'RUDDER',
         value: (state) => state.rudder,
         min: 5,
         max: 25,
@@ -221,9 +221,9 @@ class Root extends StatelessWidget {
             'b_5',
             'b_6',
             'b_7',
-            r'\delta_{вгп}',
-            r'\delta_в^{n_y}',
-            'T_V',
+            'c_{убал}',
+            'a_{бал}',
+            r'\chi',
           ]
               .map((string) => Math.tex(
                     string,
@@ -260,14 +260,14 @@ class Root extends StatelessWidget {
         builder: (context, state) => _resultTable(
           columns: <String>[
             't',
-            'des',
-            'dnp',
+            r'\delta_{еш}',
+            r'\delta_{нп}',
+            'X_2',
+            r'\psi',
+            'Y_2',
             'Y_0',
-            'Y_1',
-            'Y_3',
-            'Y_5',
-            'n_y',
-            'V_в',
+            r'\gamma',
+            r'\beta',
           ]
               .map((string) => Math.tex(
                     string,
@@ -326,42 +326,42 @@ class Root extends StatelessWidget {
       );
 
   Widget _graph1() => _resultGraph(
-        'V_в',
+        r'\gamma',
         't',
         (state) =>
             Map.fromIterables(state.results!.time, state.results!.massY2),
       );
 
   Widget _graph2() => _resultGraph(
-        'y_5',
+        r'\psi',
         't',
         (state) =>
             Map.fromIterables(state.results!.time, state.results!.massY0),
       );
 
   Widget _graph3() => _resultGraph(
-        'n_y',
+        r'\beta',
         't',
         (state) =>
             Map.fromIterables(state.results!.time, state.results!.massY4),
       );
 
   Widget _graph4() => _resultGraph(
-        'n_y',
+        'Y_0',
         't',
         (state) =>
             Map.fromIterables(state.results!.time, state.results!.massY3),
       );
 
   Widget _graph5() => _resultGraph(
-        'n_y',
+        'Y_2',
         't',
         (state) =>
             Map.fromIterables(state.results!.time, state.results!.massY1),
       );
 
   Widget _graph6() => _resultGraph(
-        'n_y',
+        'X_2',
         't',
         (state) =>
             Map.fromIterables(state.results!.time, state.results!.massX4),
