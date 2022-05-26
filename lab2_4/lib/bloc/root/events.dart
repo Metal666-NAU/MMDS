@@ -4,28 +4,40 @@ abstract class RootEvent {}
 
 class AppLoaded extends RootEvent {}
 
-class RudderChanged extends RootEvent {
-  final double rudder;
+class HeightStabilizationChanged extends RootEvent {
+  final double heightStabilization;
 
-  RudderChanged(this.rudder);
+  HeightStabilizationChanged(this.heightStabilization);
+}
+
+class TurbulentWindVerticalSpeedChanged extends RootEvent {
+  final double turbulentWindVerticalSpeed;
+
+  TurbulentWindVerticalSpeedChanged(this.turbulentWindVerticalSpeed);
+}
+
+class FlightTimeChanged extends RootEvent {
+  final double flightTime;
+
+  FlightTimeChanged(this.flightTime);
+}
+
+class OutputIntervalChanged extends RootEvent {
+  final double outputInterval;
+
+  OutputIntervalChanged(this.outputInterval);
+}
+
+class AutoStabilizationChanged extends RootEvent {
+  final bool autoStabilization;
+
+  AutoStabilizationChanged(this.autoStabilization);
 }
 
 class ElevatingRudderChanged extends RootEvent {
   final double elevatingRudder;
 
   ElevatingRudderChanged(this.elevatingRudder);
-}
-
-class RollDamperChanged extends RootEvent {
-  final RollDamper rollDamper;
-
-  RollDamperChanged(this.rollDamper);
-}
-
-class YawDamperChanged extends RootEvent {
-  final YawDamper yawDamper;
-
-  YawDamperChanged(this.yawDamper);
 }
 
 class VariantChanged extends RootEvent {

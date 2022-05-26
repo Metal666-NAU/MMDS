@@ -1,38 +1,54 @@
 import '../../data/calculations_repository.dart';
 
 class RootState {
-  final double rudder;
+  final double heightStabilization;
+  final double turbulentWindVerticalSpeed;
+  final double flightTime;
+  final double outputInterval;
+  final bool autoStabilization;
   final double elevatingRudder;
-  final RollDamper rollDamper;
-  final YawDamper yawDamper;
   final Variant variant;
 
   final CalculationResults? results;
 
   RootState({
-    this.rudder = 10,
-    this.elevatingRudder = 0,
-    this.rollDamper = RollDamper.none,
-    this.yawDamper = YawDamper.none,
+    this.heightStabilization = 0,
+    this.turbulentWindVerticalSpeed = 0,
+    this.flightTime = 15,
+    this.outputInterval = 1,
+    this.autoStabilization = false,
+    this.elevatingRudder = -2,
     this.variant = Variant.first,
     this.results,
   });
 
   RootState copyWith({
-    double Function()? rudder,
+    double Function()? heightStabilization,
+    double Function()? turbulentWindVerticalSpeed,
+    double Function()? flightTime,
+    double Function()? outputInterval,
+    bool Function()? autoStabilization,
     double Function()? elevatingRudder,
-    RollDamper Function()? rollDamper,
-    YawDamper Function()? yawDamper,
     Variant Function()? variant,
     CalculationResults? Function()? results,
   }) =>
       RootState(
-        rudder: rudder == null ? this.rudder : rudder.call(),
+        heightStabilization: heightStabilization == null
+            ? this.heightStabilization
+            : heightStabilization.call(),
+        turbulentWindVerticalSpeed: turbulentWindVerticalSpeed == null
+            ? this.turbulentWindVerticalSpeed
+            : turbulentWindVerticalSpeed.call(),
+        flightTime: flightTime == null ? this.flightTime : flightTime.call(),
+        outputInterval: outputInterval == null
+            ? this.outputInterval
+            : outputInterval.call(),
+        autoStabilization: autoStabilization == null
+            ? this.autoStabilization
+            : autoStabilization.call(),
         elevatingRudder: elevatingRudder == null
             ? this.elevatingRudder
             : elevatingRudder.call(),
-        rollDamper: rollDamper == null ? this.rollDamper : rollDamper.call(),
-        yawDamper: yawDamper == null ? this.yawDamper : yawDamper.call(),
         variant: variant == null ? this.variant : variant.call(),
         results: results == null ? this.results : results.call(),
       );

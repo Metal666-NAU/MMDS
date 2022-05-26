@@ -10,28 +10,9 @@ class RootBloc extends Bloc<RootEvent, RootState> {
   RootBloc(this._calculationsRepository) : super(RootState()) {
     on<AppLoaded>((event, emit) =>
         emit(RootState(results: _calculationsRepository.calculate())));
-    on<HeightStabilizationChanged>((event, emit) {
+    on<ElevatingRudderChanged>((event, emit) {
       RootState newState = state.copyWith(
-          heightStabilization: () => event.heightStabilization.clamp(0, 20));
-
-      emit(newState.copyWith(results: () => _calculate(newState)));
-    });
-    on<TurbulentWindVerticalSpeedChanged>((event, emit) {
-      RootState newState = state.copyWith(
-          turbulentWindVerticalSpeed: () =>
-              event.turbulentWindVerticalSpeed.clamp(0, 6));
-
-      emit(newState.copyWith(results: () => _calculate(newState)));
-    });
-    on<FlightTimeChanged>((event, emit) {
-      RootState newState =
-          state.copyWith(flightTime: () => event.flightTime.clamp(15, 300));
-
-      emit(newState.copyWith(results: () => _calculate(newState)));
-    });
-    on<OutputIntervalChanged>((event, emit) {
-      RootState newState = state.copyWith(
-          outputInterval: () => event.outputInterval.clamp(0.5, 10));
+          elevatingRudder: () => event.elevatingRudder.clamp(-5, 5));
 
       emit(newState.copyWith(results: () => _calculate(newState)));
     });
@@ -41,9 +22,25 @@ class RootBloc extends Bloc<RootEvent, RootState> {
 
       emit(newState.copyWith(results: () => _calculate(newState)));
     });
-    on<ElevatingRudderChanged>((event, emit) {
+    on<PilotGainChanged>((event, emit) {
+      RootState newState =
+          state.copyWith(pilotGain: () => event.pilotGain.clamp(1, 30));
+
+      emit(newState.copyWith(results: () => _calculate(newState)));
+    });
+    on<LatentReactionTimeChanged>((event, emit) {
       RootState newState = state.copyWith(
-          elevatingRudder: () => event.elevatingRudder.clamp(-5, 5));
+          latentReactionTime: () => event.latentReactionTime.clamp(0, 0.3));
+
+      emit(newState.copyWith(results: () => _calculate(newState)));
+    });
+    on<T2Changed>((event, emit) {
+      RootState newState = state.copyWith(T2: () => event.T2.clamp(0, 10));
+
+      emit(newState.copyWith(results: () => _calculate(newState)));
+    });
+    on<T3Changed>((event, emit) {
+      RootState newState = state.copyWith(T3: () => event.T3.clamp(0, 0.3));
 
       emit(newState.copyWith(results: () => _calculate(newState)));
     });
@@ -56,12 +53,12 @@ class RootBloc extends Bloc<RootEvent, RootState> {
 
   CalculationResults _calculate(RootState state) =>
       _calculationsRepository.calculate(
-        heightStabilization: state.heightStabilization,
-        turbulentWindVerticalSpeed: state.turbulentWindVerticalSpeed,
-        flightTime: state.flightTime,
-        outputInterval: state.outputInterval,
-        autoStabilization: state.autoStabilization,
         elevatingRudder: state.elevatingRudder,
+        autoStabilization: state.autoStabilization,
+        pilotGain: state.pilotGain,
+        latentReactionTime: state.latentReactionTime,
+        T2: state.T2,
+        T3: state.T3,
         variant: state.variant,
       );
 }

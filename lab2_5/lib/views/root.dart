@@ -18,18 +18,18 @@ class Root extends StatelessWidget {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Expanded(child: _heightStabilizationSlider()),
-              const VerticalDivider(width: 50),
-              Expanded(child: _turbulentWindVerticalSpeedSlider()),
-              const VerticalDivider(width: 50),
               Expanded(child: _elevatingRudderSlider()),
+              const VerticalDivider(width: 50),
+              Expanded(child: _pilotGainSlider()),
+              const VerticalDivider(width: 50),
+              Expanded(child: _latentReactionTimeSlider()),
             ],
           ),
           Row(
             children: <Widget>[
-              Expanded(child: _flightTimeSlider()),
+              Expanded(child: _t2Slider()),
               const VerticalDivider(width: 50),
-              Expanded(child: _outputIntervalSlider()),
+              Expanded(child: _t3Slider()),
             ],
           ),
           Row(
@@ -53,44 +53,19 @@ class Root extends StatelessWidget {
                 _table2(),
                 _graph1(),
                 _graph2(),
-              ].map((widget) {
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 40),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: widget,
-                  ),
-                );
-              }).toList(),
+                _graph3(),
+              ]
+                  .map((widget) => Card(
+                        margin: const EdgeInsets.symmetric(vertical: 40),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: widget,
+                        ),
+                      ))
+                  .toList(),
             ),
           ),
         ],
-      );
-
-  Widget _heightStabilizationSlider() => _parameterSlider(
-        text: 'HEIGHT STABILIZATION',
-        value: (state) => state.heightStabilization,
-        min: 0,
-        max: 20,
-        divisions: 20,
-        label: (state) => state.heightStabilization
-            .toStringAsFixed(3)
-            .replaceFirst(RegExp(r'\.?0*$'), ''),
-        onChanged: (value) => HeightStabilizationChanged(value),
-        divisionLabels: <String>['0', '10', '20'],
-      );
-
-  Widget _turbulentWindVerticalSpeedSlider() => _parameterSlider(
-        text: 'TURBULENT WIND VERTICAL SPEED',
-        value: (state) => state.turbulentWindVerticalSpeed,
-        min: 0,
-        max: 6,
-        divisions: 12,
-        label: (state) => state.turbulentWindVerticalSpeed
-            .toStringAsFixed(3)
-            .replaceFirst(RegExp(r'\.?0*$'), ''),
-        onChanged: (value) => TurbulentWindVerticalSpeedChanged(value),
-        divisionLabels: <String>['0', '3', '6'],
       );
 
   Widget _elevatingRudderSlider() => _parameterSlider(
@@ -106,30 +81,54 @@ class Root extends StatelessWidget {
         divisionLabels: <String>['-5', '0', '5'],
       );
 
-  Widget _flightTimeSlider() => _parameterSlider(
-        text: 'FLIGHT TIME',
-        value: (state) => state.flightTime,
-        min: 15,
-        max: 300,
-        divisions: 57,
-        label: (state) => state.flightTime
+  Widget _pilotGainSlider() => _parameterSlider(
+        text: 'PILOT GAIN',
+        value: (state) => state.pilotGain,
+        min: 1,
+        max: 30,
+        divisions: 29,
+        label: (state) => state.pilotGain
             .toStringAsFixed(3)
             .replaceFirst(RegExp(r'\.?0*$'), ''),
-        onChanged: (value) => FlightTimeChanged(value),
-        divisionLabels: <String>['15', '155', '300'],
+        onChanged: (value) => PilotGainChanged(value),
+        divisionLabels: <String>['1', '15', '30'],
       );
 
-  Widget _outputIntervalSlider() => _parameterSlider(
-        text: 'OUTPUT INTERVAL',
-        value: (state) => state.outputInterval,
-        min: 0.5,
-        max: 10,
-        divisions: 19,
-        label: (state) => state.outputInterval
+  Widget _latentReactionTimeSlider() => _parameterSlider(
+        text: 'LATENT REACTION TIME',
+        value: (state) => state.latentReactionTime,
+        min: 0,
+        max: 0.3,
+        divisions: 6,
+        label: (state) => state.latentReactionTime
             .toStringAsFixed(3)
             .replaceFirst(RegExp(r'\.?0*$'), ''),
-        onChanged: (value) => OutputIntervalChanged(value),
-        divisionLabels: <String>['0.5', '5', '10'],
+        onChanged: (value) => LatentReactionTimeChanged(value),
+        divisionLabels: <String>['0', '0.15', '0.3'],
+      );
+
+  Widget _t2Slider() => _parameterSlider(
+        text: 'T2',
+        value: (state) => state.T2,
+        min: 0,
+        max: 10,
+        divisions: 100,
+        label: (state) =>
+            state.T2.toStringAsFixed(3).replaceFirst(RegExp(r'\.?0*$'), ''),
+        onChanged: (value) => T2Changed(value),
+        divisionLabels: <String>['0', '5', '10'],
+      );
+
+  Widget _t3Slider() => _parameterSlider(
+        text: 'T3',
+        value: (state) => state.T3,
+        min: 0,
+        max: 0.3,
+        divisions: 6,
+        label: (state) =>
+            state.T3.toStringAsFixed(3).replaceFirst(RegExp(r'\.?0*$'), ''),
+        onChanged: (value) => T3Changed(value),
+        divisionLabels: <String>['0', '0.15', '0.3'],
       );
 
   Widget _autoStabilizationSwitch() => _parameterSwitch(
@@ -258,21 +257,7 @@ class Root extends StatelessWidget {
             'c_{убал}',
             'a_{бал}',
             r'\delta_{вбал}',
-            'm_{x_1}',
-            'm_{x_2}',
-            r'\sigma_{x_1}',
-            r'\sigma_{x_2}',
-            'x_{max_1}',
-            'x_{max_2}',
-            'I_{m_{x_{11}}}',
-            'I_{m_{x_{12}}}',
-            'I_{m_{x_{21}}}',
-            'I_{m_{x_{22}}}',
-            r'I_{\sigma_{x_{11}}}',
-            r'I_{\sigma_{x_{12}}}',
-            r'I_{\sigma_{x_{21}}}',
-            r'I_{\sigma_{x_{22}}}',
-            'T_a',
+            'X_{шбал}',
           ]
               .map((string) => Math.tex(
                     string,
@@ -284,21 +269,7 @@ class Root extends StatelessWidget {
               state.results!.Cybal,
               state.results!.abal,
               state.results!.dvbal,
-              state.results!.MW1,
-              state.results!.MW2,
-              state.results!.MS1,
-              state.results!.MS2,
-              state.results!.MAX1,
-              state.results!.MAX2,
-              state.results!.Imx11,
-              state.results!.Imx12,
-              state.results!.Imx21,
-              state.results!.Imx22,
-              state.results!.Idx11,
-              state.results!.Idx12,
-              state.results!.Idx21,
-              state.results!.Idx22,
-              state.results!.Ta,
+              state.results!.Xsbal,
             ].map((value) => value.toString()).toList()
           ],
           direction: Axis.horizontal,
@@ -310,9 +281,8 @@ class Root extends StatelessWidget {
         builder: (context, state) => _resultTable(
           columns: <String>[
             't',
-            'W_y',
+            r'\varDelta{X}',
             r'\varDelta\delta_в',
-            r'\alpha_в',
             r'\thetasym',
             'H',
             'n_y',
@@ -326,9 +296,8 @@ class Root extends StatelessWidget {
             state.results!.time.length,
             (index) => <String>[
               state.results!.time[index].toString(),
-              state.results!.Wy[index].toString(),
+              state.results!.Dx[index].toString(),
               state.results!.Dv[index].toString(),
-              state.results!.Y3[index].toString(),
               state.results!.Y0[index].toString(),
               state.results!.Y4[index].toString(),
               state.results!.Ny[index].toString(),
@@ -378,6 +347,12 @@ class Root extends StatelessWidget {
       );
 
   Widget _graph2() => _resultGraph(
+        r'\thetasym',
+        't',
+        (state) => Map.fromIterables(state.results!.time, state.results!.Y0),
+      );
+
+  Widget _graph3() => _resultGraph(
         'H',
         't',
         (state) => Map.fromIterables(state.results!.time, state.results!.Y4),
